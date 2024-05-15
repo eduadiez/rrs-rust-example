@@ -29,7 +29,7 @@ pub unsafe extern "C" fn _start() -> ! {
         // Main entry point
         "1:",                  // Label for main entry point (main_entry)
         "la sp, _stack_start", // Load the stack pointer address
-        "jal ra, _main",       // Jump to the main function
+        "jal ra, main",       // Jump to the main function
         // Exit point (RSS expects that to terminate the program something will be written to the address 0x80000004)
         "la x1, 0x80000004", // Load address
         "li x2, 1",                       // Write 1
@@ -40,7 +40,7 @@ pub unsafe extern "C" fn _start() -> ! {
 
 #[no_mangle]
 #[link_section = ".text"]
-unsafe extern "C" fn _main() {
+unsafe extern "C" fn main() {
     for byte in "Hello, world!\n".bytes() {
         unsafe { write_volatile(STDOUT_ADDRESS as *mut u8, byte) };
     }
