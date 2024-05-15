@@ -5,21 +5,21 @@
 
 OUTPUT_ARCH(riscv)
 
-_mem_size = 0x100000;
-_mem_start = 0x100000;
-_mem_end = _mem_start + _mem_size;
-
-_stack_start = _mem_end;
+MEMORY {
+  ram   (wxa) : ORIGIN = 0x100000, LENGTH = 1M
+}
 
 SECTIONS
 {
-  . = _mem_start;
-  .text.start : { *(.text.start) }
-  .text : { *(.text) }
-  .data : { *(.data) *(.sdata) }
+  . = ORIGIN(ram);
+  .text.start : { *(.text.start) } > ram
+  .text : { *(.text) } > ram
+  .data : { *(.data) *(.sdata) } > ram
   . = ALIGN(4);
   _bss_start = .;
-  .bss : { *(.bss) *(.sbss) }
+  .bss : { *(.bss) *(.sbss) } > ram
   . = ALIGN(4);
   _bss_end = .;
+
+   _stack_start = _bss_end;
 }
